@@ -705,6 +705,9 @@ function renderEventsPage(items) {
               <span>${event.location || 'Location TBA'}</span>
               <span>${event.seats || 0} seats</span>
             </div>
+            <button onclick="toggleEvent('${event.id}')" class="mt-3 px-3 py-2 text-xs bg-blue-500 text-white rounded-lg">
+              RSVP
+            </button>
           </div>
         </div>
       </div>
@@ -744,6 +747,9 @@ function renderClubsPage(items) {
             <h3 class="font-semibold text-lg">${club.name || 'Unnamed Club'}</h3>
             <p class="text-sm text-gray-400 mb-2">${club.category || 'General'} Â· ${club.members || 0} members</p>
             <p class="text-sm text-gray-500">${club.desc || 'No description available.'}</p>
+            <button onclick="toggleClub('${club.id}')" class="mt-3 px-3 py-2 text-xs bg-green-500 text-white rounded-lg">
+              Join
+            </button>
           </div>
         </div>
       </div>
@@ -784,6 +790,9 @@ function renderMentorsPage(items) {
             <p class="text-sm text-gray-400 mb-2">${mentor.year || 'Senior'} Â· ${mentor.branch || 'General'}</p>
             <p class="text-sm text-purple-300 mb-2">${mentor.expertise || 'Mentorship'}</p>
             <p class="text-xs text-gray-500">${Array.isArray(mentor.tags) ? mentor.tags.join(', ') : 'No tags available'}</p>
+            <button onclick="toggleMentor('${mentor.id}')" class="mt-3 px-3 py-2 text-xs bg-purple-500 text-white rounded-lg">
+              Connect
+            </button>
           </div>
         </div>
       </div>
@@ -840,3 +849,43 @@ document.addEventListener('keydown', function (event) {
 });
 
 bindGlobals();
+
+async function toggleEvent(id) {
+  if (!Auth.requireAuth()) return;
+
+  const res = await apiFetch('/user/rsvp/' + id, { method: 'POST' });
+
+  if (res.success) {
+    UI.toast('Event updated 🎉');
+  } else {
+    UI.toast(res.message || 'Error', 'error');
+  }
+}
+
+async function toggleClub(id) {
+  if (!Auth.requireAuth()) return;
+
+  const res = await apiFetch('/user/club/' + id, { method: 'POST' });
+
+  if (res.success) {
+    UI.toast('Club updated 🚀');
+  } else {
+    UI.toast(res.message || 'Error', 'error');
+  }
+}
+
+async function toggleMentor(id) {
+  if (!Auth.requireAuth()) return;
+
+  const res = await apiFetch('/user/mentor/' + id, { method: 'POST' });
+
+  if (res.success) {
+    UI.toast('Mentor connected 🤝');
+  } else {
+    UI.toast(res.message || 'Error', 'error');
+  }
+}
+
+window.toggleEvent = toggleEvent;
+window.toggleClub = toggleClub;
+window.toggleMentor = toggleMentor;
