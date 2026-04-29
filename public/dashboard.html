@@ -1,0 +1,513 @@
+UPDATE THIS FILE: public/dashboard.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Campus Connect+</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="bg-[#070D1B] text-white overflow-x-hidden">
+  <div class="fixed inset-0 pointer-events-none overflow-hidden">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <nav class="navbar" id="main-nav"></nav>
+
+  <main class="pt-24 pb-16 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div class="flex items-center gap-4">
+          <div id="avatar" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-xl font-bold flex-shrink-0"></div>
+          <div>
+            <p class="text-sm text-gray-400" id="greeting"></p>
+            <div class="flex items-center gap-2">
+              <h1 class="text-2xl font-bold" id="user-name"></h1>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-medium rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>Active
+              </span>
+            </div>
+            <p class="text-sm text-gray-500" id="user-meta"></p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button onclick="addScheduleSlot()" class="btn-ghost px-4 py-2.5 text-sm flex items-center gap-2">
+            <i data-lucide="calendar-plus" class="w-4 h-4"></i>Add Schedule
+          </button>
+          <button onclick="openProfileModal()" class="btn-primary px-4 py-2.5 text-sm flex items-center gap-2">
+            <i data-lucide="user-cog" class="w-4 h-4"></i>Edit Profile
+          </button>
+        </div>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div class="lg:col-span-2">
+          <div class="free-time-card rounded-3xl p-6 h-full">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
+                  <i data-lucide="clock" class="w-5 h-5 text-emerald-400"></i>
+                </div>
+                <div>
+                  <h3 class="font-semibold">Free Window</h3>
+                  <p class="text-xs text-emerald-400">Best time to do something</p>
+                </div>
+              </div>
+              <span id="free-status" class="badge badge-green">Detecting...</span>
+            </div>
+
+            <div class="text-center my-6">
+              <div id="free-time-range" class="text-4xl font-bold gradient-text-green mb-2">--</div>
+              <p id="free-time-desc" class="text-sm text-gray-400"></p>
+            </div>
+
+            <div class="border-t border-white/10 pt-4">
+              <p class="text-xs text-gray-500 mb-3 uppercase tracking-wider font-medium">Events that fit right now</p>
+              <div id="suggested-events" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2 flex flex-col gap-4">
+          <div class="glass-card rounded-3xl p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-semibold flex items-center gap-2">
+                <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>Smart Alert
+              </h3>
+              <span class="badge badge-amber text-xs">Top Pick</span>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="star" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <div>
+                <p class="font-medium text-sm" id="alert-title">Loading...</p>
+                <p class="text-xs text-gray-400 mt-0.5" id="alert-desc"></p>
+                <div class="flex gap-2 mt-3">
+                  <button id="alert-btn" class="btn-primary px-4 py-1.5 text-xs">View Event</button>
+                  <a href="/events" class="btn-ghost px-4 py-1.5 text-xs">All Events</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card rounded-3xl p-5">
+            <h3 class="font-semibold mb-4 flex items-center gap-2">
+              <i data-lucide="grid-3x3" class="w-4 h-4 text-blue-400"></i>Quick Actions
+            </h3>
+
+            <div class="grid grid-cols-2 gap-3">
+              <a href="/events" class="action-card p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 hover:bg-blue-500/5 text-center group">
+                <i data-lucide="calendar" class="w-6 h-6 text-blue-400 mx-auto mb-2"></i>
+                <p class="text-sm font-medium group-hover:text-blue-400">Events</p>
+                <p class="text-xs text-gray-500">Browse feed</p>
+              </a>
+
+              <a href="/clubs" class="action-card p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-indigo-500/30 hover:bg-indigo-500/5 text-center group">
+                <i data-lucide="users" class="w-6 h-6 text-indigo-400 mx-auto mb-2"></i>
+                <p class="text-sm font-medium group-hover:text-indigo-400">Clubs</p>
+                <p class="text-xs text-gray-500">Find your tribe</p>
+              </a>
+
+              <a href="/mentors" class="action-card p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 hover:bg-purple-500/5 text-center group">
+                <i data-lucide="graduation-cap" class="w-6 h-6 text-purple-400 mx-auto mb-2"></i>
+                <p class="text-sm font-medium group-hover:text-purple-400">Mentors</p>
+                <p class="text-xs text-gray-500">Ask seniors</p>
+              </a>
+
+              <button onclick="addScheduleSlot()" class="action-card p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-emerald-500/30 hover:bg-emerald-500/5 text-center group w-full">
+                <i data-lucide="clock" class="w-6 h-6 text-emerald-400 mx-auto mb-2"></i>
+                <p class="text-sm font-medium group-hover:text-emerald-400">Schedule</p>
+                <p class="text-xs text-gray-500">Add busy slots</p>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-4">
+          <div class="glass-card rounded-3xl p-6 bg-gradient-to-r from-blue-500/5 via-indigo-500/5 to-purple-500/5">
+            <h3 class="font-semibold mb-5">Your Activity</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div class="text-center">
+                <div id="stat-events" class="text-3xl font-bold mb-1">0</div>
+                <div class="text-sm text-gray-400">Events RSVPed</div>
+                <div class="stat-bar mt-2"><div id="stat-events-bar" class="stat-bar-fill bg-gradient-to-r from-blue-400 to-indigo-400" style="width:0%"></div></div>
+              </div>
+              <div class="text-center">
+                <div id="stat-clubs" class="text-3xl font-bold mb-1">0</div>
+                <div class="text-sm text-gray-400">Clubs Joined</div>
+                <div class="stat-bar mt-2"><div id="stat-clubs-bar" class="stat-bar-fill bg-gradient-to-r from-indigo-400 to-purple-400" style="width:0%"></div></div>
+              </div>
+              <div class="text-center">
+                <div id="stat-mentors" class="text-3xl font-bold mb-1">0</div>
+                <div class="text-sm text-gray-400">Mentor Connections</div>
+                <div class="stat-bar mt-2"><div id="stat-mentors-bar" class="stat-bar-fill bg-gradient-to-r from-purple-400 to-pink-400" style="width:0%"></div></div>
+              </div>
+              <div class="text-center">
+                <div id="stat-free" class="text-3xl font-bold mb-1">--</div>
+                <div class="text-sm text-gray-400">Free Hours Today</div>
+                <div class="stat-bar mt-2"><div class="stat-bar-fill bg-gradient-to-r from-emerald-400 to-teal-400" style="width:60%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2">
+          <div class="glass-card rounded-3xl p-6 h-full">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-semibold flex items-center gap-2">
+                <i data-lucide="calendar" class="w-4 h-4 text-blue-400"></i>Upcoming Events
+              </h3>
+              <a href="/events" class="text-blue-400 text-xs hover:text-blue-300 flex items-center gap-1">
+                See all <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              </a>
+            </div>
+            <div id="events-list" class="space-y-3"><p class="text-sm text-gray-500">Loading...</p></div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2">
+          <div class="glass-card rounded-3xl p-6 h-full">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-semibold flex items-center gap-2">
+                <i data-lucide="users" class="w-4 h-4 text-indigo-400"></i>My Clubs
+              </h3>
+              <a href="/clubs" class="text-indigo-400 text-xs hover:text-indigo-300 flex items-center gap-1">
+                Browse <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              </a>
+            </div>
+            <div id="clubs-list" class="space-y-3"><p class="text-sm text-gray-500">Loading...</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('DASHBOARD DOM LOADED');
+
+      if (typeof Auth === 'undefined' || typeof UI === 'undefined' || typeof loadAppData !== 'function') {
+        console.error('Dashboard dependencies missing');
+        const eventsList = document.getElementById('events-list');
+        const clubsList = document.getElementById('clubs-list');
+        if (eventsList) eventsList.innerHTML = '<p class="text-sm text-gray-500">Failed to load app.js</p>';
+        if (clubsList) clubsList.innerHTML = '<p class="text-sm text-gray-500">Failed to load app.js</p>';
+        return;
+      }
+
+      if (!Auth.requireAuth()) {
+        const eventsList = document.getElementById('events-list');
+        const clubsList = document.getElementById('clubs-list');
+        if (eventsList) eventsList.innerHTML = '<p class="text-sm text-gray-500">Please sign in to view your dashboard.</p>';
+        if (clubsList) clubsList.innerHTML = '<p class="text-sm text-gray-500">Please sign in to view your dashboard.</p>';
+        return;
+      }
+
+      const colorMap = {
+        blue: 'from-blue-500/20 to-indigo-500/20 text-blue-400',
+        emerald: 'from-emerald-500/20 to-teal-500/20 text-emerald-400',
+        purple: 'from-purple-500/20 to-pink-500/20 text-purple-400',
+        pink: 'from-pink-500/20 to-rose-500/20 text-pink-400',
+        amber: 'from-amber-500/20 to-orange-500/20 text-amber-400',
+        cyan: 'from-cyan-500/20 to-teal-500/20 text-cyan-400',
+        indigo: 'from-indigo-500/20 to-purple-500/20 text-indigo-400',
+        rose: 'from-rose-500/20 to-pink-500/20 text-rose-400'
+      };
+
+      function getFreeTime(schedule) {
+        const now = new Date();
+        const currentHour = now.getHours() + now.getMinutes() / 60;
+        const dayEnd = 20;
+        const slots = Array.isArray(schedule) ? schedule.slice().sort(function (a, b) {
+          return Number(a.start || 0) - Number(b.start || 0);
+        }) : [];
+
+        let cursor = Math.max(8, currentHour);
+
+        for (const slot of slots) {
+          if (currentHour >= slot.start && currentHour < slot.end) {
+            const next = slots.find(function (item) {
+              return item.start >= slot.end;
+            });
+            return {
+              status: 'busy',
+              nextFree: { start: slot.end, end: next ? next.start : dayEnd }
+            };
+          }
+
+          if (cursor < slot.start) {
+            return {
+              status: 'free',
+              window: {
+                start: cursor,
+                end: slot.start,
+                hours: Math.round((slot.start - cursor) * 10) / 10
+              }
+            };
+          }
+
+          cursor = Math.max(cursor, slot.end);
+        }
+
+        if (cursor < dayEnd) {
+          return {
+            status: 'free',
+            window: {
+              start: cursor,
+              end: dayEnd,
+              hours: Math.round((dayEnd - cursor) * 10) / 10
+            }
+          };
+        }
+
+        return { status: 'none' };
+      }
+
+      async function renderDashboard() {
+        try {
+          const user = Auth.getUser() || {};
+          const registeredEvents = Array.isArray(user.registeredEvents) ? user.registeredEvents : [];
+          const joinedClubs = Array.isArray(user.joinedClubs) ? user.joinedClubs : [];
+          const mentorConnections = Array.isArray(user.mentorConnections) ? user.mentorConnections : [];
+          const interests = Array.isArray(user.interests) ? user.interests : [];
+          const schedule = Array.isArray(user.schedule) ? user.schedule : [];
+
+          const hour = new Date().getHours();
+          document.getElementById('greeting').textContent = hour < 12 ? 'Good morning,' : hour < 17 ? 'Good afternoon,' : 'Good evening,';
+          document.getElementById('user-name').textContent = user.name || 'Student';
+          document.getElementById('avatar').textContent = (user.name || 'S').charAt(0).toUpperCase();
+          document.getElementById('user-meta').textContent = `${user.branch || 'Branch'} · Year ${user.year || '-'}${interests.length ? ' · ' + interests.slice(0, 2).join(', ') : ''}`;
+
+          document.getElementById('stat-events').textContent = registeredEvents.length;
+          document.getElementById('stat-clubs').textContent = joinedClubs.length;
+          document.getElementById('stat-mentors').textContent = mentorConnections.length;
+          document.getElementById('stat-events-bar').style.width = Math.min(registeredEvents.length * 20, 100) + '%';
+          document.getElementById('stat-clubs-bar').style.width = Math.min(joinedClubs.length * 20, 100) + '%';
+          document.getElementById('stat-mentors-bar').style.width = Math.min(mentorConnections.length * 25, 100) + '%';
+
+          await loadAppData();
+
+          const allEvents = Array.isArray(window.EVENTS) ? window.EVENTS : [];
+          const allClubs = Array.isArray(window.CLUBS) ? window.CLUBS : [];
+
+          const freeTime = getFreeTime(schedule);
+
+          if (freeTime.status === 'free') {
+            document.getElementById('free-status').textContent = 'Free Now';
+            document.getElementById('free-time-range').textContent = `${UI.formatHour(freeTime.window.start)} - ${UI.formatHour(freeTime.window.end)}`;
+            document.getElementById('free-time-desc').textContent = `${freeTime.window.hours} hours free · Make the most of it`;
+            document.getElementById('stat-free').textContent = `${freeTime.window.hours}h`;
+          } else if (freeTime.status === 'busy') {
+            document.getElementById('free-status').textContent = 'Busy Now';
+            document.getElementById('free-status').className = 'badge badge-amber';
+            document.getElementById('free-time-range').textContent = `${UI.formatHour(freeTime.nextFree.start)} - ${UI.formatHour(freeTime.nextFree.end)}`;
+            document.getElementById('free-time-desc').textContent = 'Next free window coming up';
+          } else {
+            document.getElementById('free-time-range').textContent = 'All done today';
+            document.getElementById('free-time-desc').textContent = 'Check tomorrow\'s schedule';
+          }
+
+          const rankedEvents = allEvents
+            .filter(function (event) {
+              return event.branch === 'All' || event.branch === user.branch;
+            })
+            .sort(function (a, b) {
+              const score = function (event) {
+                return interests.some(function (interest) {
+                  return String(event.category || '').toLowerCase().includes(String(interest).toLowerCase());
+                }) ? 1 : 0;
+              };
+              return score(b) - score(a);
+            });
+
+          const suggestedEvents = document.getElementById('suggested-events');
+          suggestedEvents.innerHTML = rankedEvents.slice(0, 2).map(function (event) {
+            return `
+              <button onclick="openEventModal('${event.id}')" class="p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-left transition-all group">
+                <p class="text-sm font-medium text-white group-hover:text-blue-400 truncate mb-0.5">${event.title}</p>
+                <p class="text-xs text-gray-500">${event.day} · ${UI.formatHour(event.start)}</p>
+              </button>
+            `;
+          }).join('') || '<p class="text-sm text-gray-500">No data available</p>';
+
+          const topEvent = rankedEvents[0];
+          if (topEvent) {
+            document.getElementById('alert-title').textContent = topEvent.title;
+            document.getElementById('alert-desc').textContent = `${topEvent.club} · ${topEvent.location} · ${topEvent.day}`;
+            document.getElementById('alert-btn').onclick = function () {
+              openEventModal(topEvent.id);
+            };
+          } else {
+            document.getElementById('alert-title').textContent = 'No events available';
+            document.getElementById('alert-desc').textContent = 'Check back later for new recommendations.';
+          }
+
+          const eventsToShow = registeredEvents.length
+            ? allEvents.filter(function (event) { return registeredEvents.includes(event.id); })
+            : rankedEvents.slice(0, 4);
+
+          document.getElementById('events-list').innerHTML = eventsToShow.map(function (event) {
+            return `
+              <div onclick="openEventModal('${event.id}')" class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${colorMap[event.color] || colorMap.blue} flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="${event.icon}" class="w-4 h-4"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium group-hover:text-blue-400 truncate">${event.title}</p>
+                  <p class="text-xs text-gray-500">${event.day} · ${UI.formatHour(event.start)} · ${event.location}</p>
+                </div>
+                ${registeredEvents.includes(event.id) ? '<span class="badge badge-green text-xs">RSVPed</span>' : ''}
+              </div>
+            `;
+          }).join('') || '<p class="text-sm text-gray-500">No data available</p>';
+
+          const clubsToShow = joinedClubs.length
+            ? allClubs.filter(function (club) { return joinedClubs.includes(club.id); })
+            : allClubs.slice(0, 4);
+
+          document.getElementById('clubs-list').innerHTML = clubsToShow.map(function (club) {
+            return `
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${colorMap[club.color] || colorMap.indigo} flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="${club.icon}" class="w-4 h-4"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium truncate">${club.name}</p>
+                  <p class="text-xs text-gray-500">${club.members} members</p>
+                </div>
+                ${joinedClubs.includes(club.id) ? '<span class="badge badge-green text-xs">Joined</span>' : `<a href="/clubs" class="btn-ghost px-3 py-1 text-xs">Join</a>`}
+              </div>
+            `;
+          }).join('') || '<p class="text-sm text-gray-500">No data available</p>';
+
+          createIcons();
+        } catch (error) {
+          console.error('renderDashboard failed:', error);
+          document.getElementById('events-list').innerHTML = '<p class="text-sm text-gray-500">No data available</p>';
+          document.getElementById('clubs-list').innerHTML = '<p class="text-sm text-gray-500">No data available</p>';
+        }
+      }
+
+      function createIcons() {
+        if (typeof lucide !== 'undefined' && lucide && typeof lucide.createIcons === 'function') {
+          lucide.createIcons();
+        }
+      }
+
+      function openEventModal(id) {
+        const user = Auth.getUser() || {};
+        const allEvents = Array.isArray(window.EVENTS) ? window.EVENTS : [];
+        const event = allEvents.find(function (item) { return item.id === id; });
+
+        if (!event) {
+          UI.toast('Event not found', 'error');
+          return;
+        }
+
+        const registeredEvents = Array.isArray(user.registeredEvents) ? user.registeredEvents : [];
+        const registered = registeredEvents.includes(id);
+
+        UI.openModal(`
+          <div class="flex items-start gap-4 mb-5">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${colorMap[event.color] || colorMap.blue} flex items-center justify-center flex-shrink-0">
+              <i data-lucide="${event.icon}" class="w-7 h-7"></i>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold">${event.title}</h2>
+              <p class="text-gray-400 text-sm">${event.club} · ${event.category}</p>
+            </div>
+          </div>
+          <div class="space-y-2 mb-5">
+            <div class="flex items-center gap-2 text-sm text-gray-300"><i data-lucide="calendar" class="w-4 h-4 text-gray-500"></i>${event.day} · ${UI.formatHour(event.start)} - ${UI.formatHour(event.end)}</div>
+            <div class="flex items-center gap-2 text-sm text-gray-300"><i data-lucide="map-pin" class="w-4 h-4 text-gray-500"></i>${event.location}</div>
+            <div class="flex items-center gap-2 text-sm text-gray-300"><i data-lucide="users" class="w-4 h-4 text-gray-500"></i>${event.seats} seats remaining</div>
+          </div>
+          <button onclick="toggleEvent('${event.id}')" class="${registered ? 'btn-ghost border border-emerald-500/30 text-emerald-400' : 'btn-primary'} w-full py-3 text-sm font-semibold">
+            ${registered ? 'Registered - Click to cancel' : 'RSVP for this Event'}
+          </button>
+        `);
+      }
+
+      async function toggleEvent(id) {
+        const response = await apiFetch(`/user/rsvp/${id}`, { method: 'POST' });
+
+        if (response.success) {
+          const user = Auth.getUser() || {};
+          user.registeredEvents = Array.isArray(response.registeredEvents) ? response.registeredEvents : [];
+          localStorage.setItem('cc_user', JSON.stringify(user));
+          UI.toast(user.registeredEvents.includes(id) ? 'RSVP confirmed!' : 'Registration cancelled', user.registeredEvents.includes(id) ? 'success' : 'info');
+          UI.closeModal();
+          renderDashboard();
+        } else {
+          UI.toast(response.message || 'Failed. Please try again.', 'error');
+        }
+      }
+
+      function addScheduleSlot() {
+        UI.openModal(`
+          <h2 class="text-xl font-bold mb-1">Add Busy Slot</h2>
+          <p class="text-gray-400 text-sm mb-5">Add a class or commitment so we can find your free windows.</p>
+          <form id="schedule-form" class="space-y-4">
+            <label class="block text-sm text-gray-300">Title<input name="title" class="form-input mt-1.5" placeholder="DSA Class, Lab, etc."></label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="block text-sm text-gray-300">Start (24h)<input name="start" type="number" min="8" max="20" step="0.5" class="form-input mt-1.5" placeholder="e.g. 9"></label>
+              <label class="block text-sm text-gray-300">End (24h)<input name="end" type="number" min="8" max="20" step="0.5" class="form-input mt-1.5" placeholder="e.g. 11"></label>
+            </div>
+            <button type="submit" class="btn-primary w-full py-3 text-sm">Add Slot</button>
+          </form>
+        `);
+
+        setTimeout(function () {
+          const form = document.getElementById('schedule-form');
+          if (!form) return;
+
+          form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+
+            const response = await apiFetch('/schedule', {
+              method: 'POST',
+              body: {
+                title: formData.get('title'),
+                start: parseFloat(formData.get('start')),
+                end: parseFloat(formData.get('end'))
+              }
+            });
+
+            if (response.success) {
+              const user = Auth.getUser() || {};
+              user.schedule = Array.isArray(response.schedule) ? response.schedule : [];
+              localStorage.setItem('cc_user', JSON.stringify(user));
+              UI.closeModal();
+              UI.toast('Schedule updated!');
+              renderDashboard();
+            } else {
+              UI.toast(response.message || 'Failed', 'error');
+            }
+          });
+        }, 50);
+      }
+
+      window.openEventModal = openEventModal;
+      window.toggleEvent = toggleEvent;
+      window.addScheduleSlot = addScheduleSlot;
+
+      renderNav('dashboard');
+      renderDashboard();
+    });
+  </script>
+</body>
+</html>
+```
