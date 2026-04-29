@@ -1,6 +1,8 @@
 const User = require('../models/User');
 
-// UPDATE PROFILE
+// @route  PUT /api/user/profile
+// @desc   Update user profile
+// @access Private
 const updateProfile = async (req, res) => {
   try {
     const { name, branch, year, interests } = req.body;
@@ -17,7 +19,9 @@ const updateProfile = async (req, res) => {
   }
 };
 
-// TOGGLE EVENT RSVP
+// @route  POST /api/user/rsvp/:eventId
+// @desc   Toggle RSVP for an event
+// @access Private
 const toggleRsvp = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -41,7 +45,9 @@ const toggleRsvp = async (req, res) => {
   }
 };
 
-// TOGGLE CLUB JOIN
+// @route  POST /api/user/club/:clubId
+// @desc   Toggle club membership
+// @access Private
 const toggleClub = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -65,7 +71,9 @@ const toggleClub = async (req, res) => {
   }
 };
 
-// TOGGLE MENTOR CONNECTION
+// @route  POST /api/user/mentor/:mentorId
+// @desc   Toggle mentor connection
+// @access Private
 const toggleMentor = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
